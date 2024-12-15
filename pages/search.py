@@ -3,7 +3,10 @@ import requests
 import streamlit as st
 from constants import BASE_URL
 
-st.set_page_config(page_title="WebRAGe")
+st.set_page_config(
+    page_title="WebRAGe",
+    initial_sidebar_state="collapsed"
+)
 
 if not "url" in st.session_state:
   st.switch_page("client.py")
