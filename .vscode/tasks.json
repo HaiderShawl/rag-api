@@ -1,0 +1,20 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Deploy API",
+      "type": "shell",
+      "command": ". gcloud run deploy --source .",
+      "presentation": {
+        "panel": "new",
+      },
+  }, {
+      "label": "Run streamlit app",
+      "type": "shell",
+      "command": ". streamlit run --\"client.showSidebarNavigation=False\" client.py",
+      "presentation": {
+        "panel": "new",
+      },
+  },
+]
+}

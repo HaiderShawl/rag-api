@@ -1,9 +1,8 @@
 import requests
 from model import encode
-from vectors import upsert
+from vectors import upsert, update_indexing_status
 from bs4 import BeautifulSoup
 
-url = 'https://help.octaneai.com/en/collections/9496268-developer-docs'
 
 def index_webpage(url, indexed_urls):
   print(url)
@@ -20,15 +19,16 @@ def index_webpage(url, indexed_urls):
   return links
 
 
-def index_website(url):
+def index(url):
   indexed_urls=[]
   urls = [url]
 
-  while urls and len(indexed_urls) < 100:
+  update_indexing_status(url, 'IN_PROGRESS')
+
+  while urls and len(indexed_urls) < 10:
     url = urls.pop()
     indexed_urls.append(url)
     urls += index_webpage(url, indexed_urls)
     urls = list(set(urls))
-
-
-index_website(url)
+  
+  update_indexing_status(url, 'COMPLETED')

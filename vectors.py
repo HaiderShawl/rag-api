@@ -15,8 +15,16 @@ docs = vx.get_or_create_collection(
     name="docs",
     dimension=DIMENSION_SIZE,
 )
+status_docs = vx.get_or_create_collection(
+    name="status",
+    dimension=1,
+)
 
 docs.create_index(
+    method=vecs.IndexMethod.auto,
+    measure=vecs.IndexMeasure.cosine_distance,
+)
+status_docs.create_index(
     method=vecs.IndexMethod.auto,
     measure=vecs.IndexMeasure.cosine_distance,
 )
@@ -25,6 +33,7 @@ docs.create_index(
 def upsert(text, url):
     chunks = [text[i:i + CHUNK_SIZE] for i in range(0, len(text), CHUNK_SIZE)]
     embeddings = encode(chunks)
+    base_url = url.split('/')[2]
 
     records = [
         (
@@ -32,7 +41,8 @@ def upsert(text, url):
             embedding,
             {
                 "url": url,
-                "chunk": chunks[i]
+                "chunk": chunks[i],
+                "base_url": base_url,
             }
         )
         for i, embedding in enumerate(embeddings)
@@ -40,12 +50,13 @@ def upsert(text, url):
     docs.upsert(records=records)
 
 
-def query(text):
+def query(text, filters={}):
     embeddings = encode([text])
     results = docs.query(
         data=embeddings[0],
         measure="cosine_distance",
-        limit=3,
+        limit=5,
+        filters=filters,
         include_value=True,
         include_metadata=True,
     )
@@ -56,3 +67,32 @@ def query(text):
     } for result in results]
 
     return data
+
+
+def update_indexing_status(url, status):
+    base_url = url.split('/')[2]
+    status_docs.upsert(
+        records=[
+            (
+                base_url,
+                [0],
+                {
+                    "status": status,
+                    "base_url": base_url,
+                },
+            )
+        ]
+    )
+
+
+def get_indexing_status(url):
+    base_url = url.split('/')[2]
+    filters = {"base_url": {"$eq": base_url}}
+    result = status_docs.query(
+        data=[0],
+        limit=1,
+        filters=filters,
+        include_value=True,
+        include_metadata=True,
+    )
+    return result
