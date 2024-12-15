@@ -24,7 +24,7 @@ def index_website(url):
   indexed_urls=[]
   urls = [url]
 
-  while urls:
+  while urls and len(indexed_urls) < 100:
     url = urls.pop()
     indexed_urls.append(url)
     urls += index_webpage(url, indexed_urls)
