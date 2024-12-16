@@ -30,7 +30,7 @@ while True:
   time.sleep(15)
 
   try:
-    response = requests.get(API_URL, headers=headers, json=data)
+    response = requests.post(API_URL, headers=headers, json=data)
     result = response.json()
 
     if result["status"]:

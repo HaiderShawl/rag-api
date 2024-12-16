@@ -36,7 +36,7 @@ def index_website():
         return jsonify({"status": False, "message": str(e)})
 
 
-@app.route('/index-status', methods=['GET'])
+@app.route('/index-status', methods=['POST'])
 def index_status():
     try:
         data = request.get_json()
