@@ -17,7 +17,7 @@ st.write("Transform any docs into a semantically searchable, RAG-ready knowledge
 API_URL = f"{BASE_URL}/index-status"
 
 base_url = st.session_state.url.split('/')[2]
-st.status(f"Indexing {base_url} and all its subpages")
+st.status(f"Indexing {base_url} and upto 10 subpages (this may take a few minutes)")
 
 if st.button("Back"):
   st.session_state.url = ""
