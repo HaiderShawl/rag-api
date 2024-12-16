@@ -41,6 +41,7 @@ while True:
       raise Exception()
   except Exception as e:
     st.write("Something went wrong. Please try again later")
+    st.write(str(e))
     time.sleep(5)
-    st.switch_page("client.py")
+    # st.switch_page("client.py")
     break

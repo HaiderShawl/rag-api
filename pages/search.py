@@ -25,10 +25,11 @@ def search():
   response = requests.post(API_URL, headers=headers, json=data)
   results = response.json()["data"]
 
-  for result in reversed(results):
+  for index, result in enumerate(reversed(results)):
     with tab1.expander(f"{result['metadata']['url']}"):
       st.write(f"Cosine Similarity score: {result['score']:.2f}")
       st.write(result['metadata']["chunk"])
+      st.write(f"Visit the page [here]({result['metadata']['url']})")        
 
 
 base_url = st.session_state.url.split('/')[2]
