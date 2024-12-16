@@ -27,6 +27,8 @@ if st.button("Back"):
 headers = {"Content-Type": "application/json"}
 data = {"url": st.session_state.url}
 while True:
+  time.sleep(15)
+
   try:
     response = requests.get(API_URL, headers=headers, json=data)
     result = response.json()
@@ -35,8 +37,6 @@ while True:
       if result["indexed"]:
         st.switch_page("pages/search.py")
         break
-      else:
-        time.sleep(15)
     else:
       raise Exception()
   except Exception as e:
